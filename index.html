@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Web Dev Project Tracker</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .progress {
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .section {
+      margin-bottom: 25px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #1e293b;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      margin: 5px 0;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    .checked {
+      text-decoration: line-through;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>💻 Web Developer Project Tracker</h1>
+<div class="progress">Completed: <span id="count">0</span>/100</div>
+
+<div id="projects"></div>
+
+<script>
+const sections = {
+  "Beginner (1–25)": [
+    "Personal portfolio website","Responsive landing page","To-do list app","Weather app","Calculator","Digital clock","Quiz app","Blog UI","Image gallery","Navbar animations","Form validation","Quote generator","Notes app","Countdown timer","Password generator","E-commerce UI","Music player UI","Meme generator","Typing test","Expense tracker","Dark/light mode","Recipe site","Bookmark manager","FAQ accordion","CSS animations"
+  ],
+
+  "Intermediate (26–60)": [
+    "Blog with CMS","Chat app","Auth system","E-commerce app","Movie search app","GitHub viewer","Kanban board","Notes with tags","File upload","Voting app","URL shortener","Markdown editor","Blog with comments","Habit tracker","Pomodoro timer","Notification system","Job listing UI","Social dashboard","Multi-step form","Drag-drop builder","Chatbot UI","Resume builder","Code editor","Chart dashboard","Event booking","Multi-language site","Infinite scroll","Docs clone","Review system","Image upload app","Admin panel","News app","Calendar app","Team kanban","Bookmark sharing"
+  ],
+
+  "Advanced (61–85)": [
+    "Full SaaS app","Whiteboard","Video streaming","Full e-commerce","AI chatbot","Twitter clone","Instagram clone","LinkedIn clone","LMS","Multiplayer game","Code collaboration","Rich blog","Microservices app","JWT auth","Stock tracker","Portfolio SaaS","Subscription system","Voting system","Video call app","Resume AI","Marketplace","Testing dashboard","Data dashboard","Server monitor","Bug tracker"
+  ],
+
+  "Creative (86–100)": [
+    "Study room","AI study planner","Horror generator","Hacking simulator","Dev habit tracker","Focus app","AI idea generator","Interview tracker","Virtual pet","Coding challenge","Explain code AI","Snippet manager","Portfolio analyzer","Meme generator","Open-source tracker"
+  ]
+};
+
+const container = document.getElementById("projects");
+
+// Load saved data
+let saved = JSON.parse(localStorage.getItem("checkedProjects")) || [];
+
+let globalIndex = 0;
+
+for (let section in sections) {
+  const div = document.createElement("div");
+  div.className = "section";
+
+  const title = document.createElement("h2");
+  title.textContent = section;
+  div.appendChild(title);
+
+  sections[section].forEach(project => {
+    const label = document.createElement("label");
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+
+    checkbox.checked = saved.includes(globalIndex);
+
+    if (checkbox.checked) label.classList.add("checked");
+
+    checkbox.addEventListener("change", () => {
+      if (checkbox.checked) {
+        saved.push(globalIndex);
+        label.classList.add("checked");
+      } else {
+        saved = saved.filter(i => i !== globalIndex);
+        label.classList.remove("checked");
+      }
+
+      localStorage.setItem("checkedProjects", JSON.stringify(saved));
+      updateCount();
+    });
+
+    label.appendChild(checkbox);
+    label.appendChild(document.createTextNode(project));
+    div.appendChild(label);
+
+    globalIndex++;
+  });
+
+  container.appendChild(div);
+}
+
+function updateCount() {
+  const checked = document.querySelectorAll("input:checked").length;
+  document.getElementById("count").innerText = checked;
+}
+
+// Initial count
+updateCount();
+</script>
+
+</body>
+</html>
