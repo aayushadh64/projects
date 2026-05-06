@@ -91,21 +91,26 @@ for (let section in sections) {
   title.textContent = section;
   div.appendChild(title);
 
-  sections[section].forEach(project => {
+  sections[section].forEach((project) => {
+    const currentIndex = globalIndex; // ✅ FIXED
+
     const label = document.createElement("label");
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
 
-    checkbox.checked = saved.includes(globalIndex);
+    // restore state
+    checkbox.checked = saved.includes(currentIndex);
 
     if (checkbox.checked) label.classList.add("checked");
 
     checkbox.addEventListener("change", () => {
       if (checkbox.checked) {
-        saved.push(globalIndex);
+        if (!saved.includes(currentIndex)) {
+          saved.push(currentIndex);
+        }
         label.classList.add("checked");
       } else {
-        saved = saved.filter(i => i !== globalIndex);
+        saved = saved.filter(i => i !== currentIndex);
         label.classList.remove("checked");
       }
 
@@ -117,7 +122,7 @@ for (let section in sections) {
     label.appendChild(document.createTextNode(project));
     div.appendChild(label);
 
-    globalIndex++;
+    globalIndex++; // increment AFTER assigning index
   });
 
   container.appendChild(div);
@@ -128,7 +133,7 @@ function updateCount() {
   document.getElementById("count").innerText = checked;
 }
 
-// Initial count
+// initial count
 updateCount();
 </script>
 
